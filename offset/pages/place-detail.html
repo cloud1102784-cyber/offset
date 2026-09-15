@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Place Feature — OFFSET®</title>
+  <meta name="description" content="An authored architectural monograph and spatial observation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================================
+       OFFSET® Signature Place Detail — Atmospheric Monograph
+       ======================================================== */
+    :root {
+      --color-ink: #111111;
+      --color-paper: #F2F0EA;
+      --color-graphite: #242424;
+      --color-muted: #858585;
+      --color-line: rgba(17, 17, 17, 0.12);
+      --detail-theme: #586772;
+      --detail-text: #E5ECF0;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif;
+      --container-width: 1600px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    body {
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--color-ink);
+      color: var(--color-paper);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: inherit;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: 0 56px;
+    }
+
+    /* Custom Cursor */
+    .custom-cursor {
+      position: fixed;
+      top: -16px;
+      left: -16px;
+      width: 10px;
+      height: 10px;
+      background-color: var(--color-ink);
+      border-radius: 50% !important;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate3d(0, 0, 0);
+      transition: width 0.2s ease, height 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .custom-cursor__label {
+      display: none;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--color-paper);
+      letter-spacing: 0.12em;
+    }
+
+    .custom-cursor--expanded {
+      width: 64px;
+      height: 64px;
+      top: -32px;
+      left: -32px;
+      background-color: rgba(17, 17, 17, 0.9);
+      backdrop-filter: blur(4px);
+    }
+
+    .custom-cursor--expanded .custom-cursor__label {
+      display: block;
+    }
+
+    /* Minimal Chrome Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      border-bottom: 1px solid var(--color-line);
+      background-color: rgba(242, 240, 234, 0.9);
+      backdrop-filter: blur(10px);
+    }
+
+    .header__inner {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1fr;
+      align-items: center;
+      height: 56px;
+    }
+
+    .header__brand {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+    }
+
+    .header__logo {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+    }
+
+    .header__nav {
+      display: flex;
+      gap: 40px;
+    }
+
+    .header__nav-link {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .header__actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 32px;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    /* Feature Article Header (Deliberate Asymmetric Offset) */
+    .article-header {
+      padding: 80px 0 40px;
+      border-bottom: 1px solid var(--color-line);
+    }
+
+    .article-header__meta-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      color: var(--color-muted);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .article-header__title {
+      font-family: var(--font-serif);
+      font-size: clamp(4rem, 10vw, 10.5rem);
+      font-weight: 300;
+      line-height: 0.86;
+      letter-spacing: -0.05em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .article-header__meta-sub {
+      display: flex;
+      gap: 56px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: var(--color-muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* Massive Photography Canvas */
+    .article-hero-visual {
+      width: 100%;
+      height: 86vh;
+      min-height: 680px;
+      background-color: var(--color-graphite);
+      overflow: hidden;
+      margin: 56px 0 110px;
+      position: relative;
+    }
+
+    .article-hero-visual__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(8%);
+    }
+
+    /* Asymmetric Monograph Grid */
+    .article-body {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 48px;
+      padding-bottom: 140px;
+      border-bottom: 1px solid var(--color-line);
+    }
+
+    /* Left Specification (Col 1 to 4) */
+    .article-info-col {
+      grid-column: 1 / span 4;
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+    }
+
+    .info-table {
+      width: 100%;
+      border-top: 1px solid var(--color-line);
+    }
+
+    .info-table__row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--color-line);
+      font-size: 0.85rem;
+    }
+
+    .info-table__key {
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      color: var(--color-muted);
+      text-transform: uppercase;
+    }
+
+    .info-table__val {
+      font-weight: 500;
+      color: var(--color-ink);
+    }
+
+    /* Hairline Action Button */
+    .article-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .btn-save-place {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 28px;
+      border: 1px solid var(--color-ink);
+      background-color: transparent;
+      color: var(--color-ink);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      transition: background-color 200ms ease, color 200ms ease;
+    }
+
+    .btn-save-place:hover {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+
+    .btn-save-place--saved {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+
+    .btn-map-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 28px;
+      border: 1px solid var(--color-line);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      transition: border-color 200ms ease;
+    }
+
+    .btn-map-link:hover {
+      border-color: var(--color-ink);
+    }
+
+    /* Right Editorial Narrative (Col 6 to 12) - Intentional Gap */
+    .article-essay-col {
+      grid-column: 6 / span 7;
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+    }
+
+    .editorial-quote {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 4.5vw, 4.8rem);
+      font-weight: 300;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      border-left: 1px solid var(--color-ink);
+      padding-left: 40px;
+    }
+
+    .editorial-description {
+      font-size: 1.2rem;
+      line-height: 1.9;
+      color: var(--color-ink);
+      max-width: 680px;
+    }
+
+    /* Asymmetric Photography Spreads */
+    .gallery-section {
+      padding: 140px 0;
+    }
+
+    .asymmetric-gallery {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 48px;
+    }
+
+    .gallery-item {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .gallery-item--1 {
+      grid-column: 1 / span 8;
+      aspect-ratio: 16 / 10;
+    }
+
+    .gallery-item--2 {
+      grid-column: 8 / span 5;
+      aspect-ratio: 4 / 5;
+      margin-top: -80px;
+      z-index: 5;
+    }
+
+    .gallery-item--3 {
+      grid-column: 3 / span 8;
+      aspect-ratio: 21 / 9;
+      margin-top: 40px;
+    }
+
+    .gallery-item__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-color: var(--color-graphite);
+      filter: grayscale(10%);
+      transition: transform 0.8s ease;
+    }
+
+    .gallery-item:hover .gallery-item__img {
+      transform: scale(1.02);
+    }
+
+    .gallery-item__caption {
+      font-family: monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: var(--color-muted);
+      text-transform: uppercase;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 96px 0 48px;
+      border-top: 1px solid var(--color-line);
+      background-color: var(--color-paper);
+    }
+
+    .footer__bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--color-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        padding: 0 32px;
+      }
+      .custom-cursor {
+        display: none !important;
+      }
+      .article-body {
+        grid-template-columns: 1fr;
+      }
+      .article-info-col,
+      .article-essay-col {
+        grid-column: 1 / -1;
+      }
+      .gallery-item--1,
+      .gallery-item--2,
+      .gallery-item--3 {
+        grid-column: span 12;
+        margin-top: 0;
+        aspect-ratio: 16 / 10;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 20px;
+      }
+      .header__inner {
+        grid-template-columns: 1fr 1fr;
+      }
+      .header__nav {
+        display: none;
+      }
+      .article-hero-visual {
+        height: 55vh;
+        min-height: 400px;
+        margin: 32px 0 64px;
+      }
+      .editorial-quote {
+        padding-left: 20px;
+      }
+      .footer__bottom {
+        flex-direction: column;
+        gap: 14px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body class="page-detail">
+  <!-- Minimalist Header -->
+  <header class="header">
+    <div class="container header__inner">
+      <div class="header__brand">
+        <a href="../index.html" class="header__logo" data-cursor="HOME">OFFSET®</a>
+        <span class="header__location">SEOUL, KR</span>
+      </div>
+
+      <nav class="header__nav" aria-label="Main navigation">
+        <a href="places.html" class="header__nav-link" data-cursor="INDEX">Index</a>
+        <a href="../index.html#section-selected" class="header__nav-link" data-cursor="SELECTION">Selected</a>
+        <a href="../index.html#section-neighbourhoods" class="header__nav-link" data-cursor="DISTRICTS">Neighbourhoods</a>
+      </nav>
+
+      <div class="header__actions">
+        <a href="search.html" class="header__nav-link" data-cursor="SEARCH">Search</a>
+        <a href="saved.html" class="header__nav-link" data-cursor="ARCHIVE">Saved [<span class="bind-saved-count">00</span>]</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Monograph Header -->
+    <header class="container article-header">
+      <div class="article-header__meta-top">
+        <span>PLATE NO. <strong class="bind-place-id">001</strong></span>
+        <span><span class="bind-place-neighbourhood">SEONGSU</span> / <span class="bind-place-category">RETAIL</span></span>
+      </div>
+      <h1 class="article-header__title bind-place-name">PLACE NAME</h1>
+      <div class="article-header__meta-sub">
+        <span class="bind-place-coordinates">37°33′N 126°59′E</span>
+        <span>AUTHORED MONOGRAPH / SEOUL ARCHIVE</span>
+      </div>
+    </header>
+
+    <!-- Massive Photographic Canvas -->
+    <div class="container">
+      <div class="article-hero-visual" data-cursor="EXPAND">
+        <img src="" alt="Place Main Architectural Photo" class="article-hero-visual__img bind-hero-img">
+      </div>
+    </div>
+
+    <!-- Asymmetric Monograph Grid -->
+    <section class="container article-body" aria-label="Place specifications and review">
+      <aside class="article-info-col" aria-label="Specifications">
+        <table class="info-table" aria-label="Place specifications">
+          <tbody>
+            <tr class="info-table__row">
+              <th scope="row" class="info-table__key">SECTOR</th>
+              <td class="info-table__val bind-place-category">RETAIL</td>
+            </tr>
+            <tr class="info-table__row">
+              <th scope="row" class="info-table__key">DISTRICT</th>
+              <td class="info-table__val bind-place-neighbourhood">SEONGSU</td>
+            </tr>
+            <tr class="info-table__row">
+              <th scope="row" class="info-table__key">HOURS</th>
+              <td class="info-table__val bind-place-hours">12:00 — 20:00</td>
+            </tr>
+            <tr class="info-table__row">
+              <th scope="row" class="info-table__key">LOCATION</th>
+              <td class="info-table__val bind-place-address">Yeonmujang-gil, Seoul</td>
+            </tr>
+            <tr class="info-table__row">
+              <th scope="row" class="info-table__key">SCALE</th>
+              <td class="info-table__val bind-place-price">$$</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="article-actions">
+          <button type="button" class="btn-save-place" data-cursor="ARCHIVE" aria-pressed="false">
+            <span class="save-text">SAVE THIS SCENE [+]</span>
+          </button>
+          <a href="https://map.naver.com" target="_blank" rel="noopener noreferrer" class="btn-map-link" data-cursor="MAP">
+            <span>OBSERVE MAP</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </aside>
+
+      <div class="article-essay-col">
+        <blockquote class="editorial-quote bind-place-quote">
+          “The city outside is loud. This place isn't.”
+        </blockquote>
+        <p class="editorial-description bind-place-description">
+          Description Loading...
+        </p>
+      </div>
+    </section>
+
+    <!-- Asymmetric Gallery Spreads -->
+    <section class="container gallery-section" aria-label="Visual plates">
+      <div class="asymmetric-gallery">
+        <!-- Populated by assets/js/main.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer__bottom">
+      <p>&copy; 2026 OFFSET®. ALL RIGHTS RESERVED.</p>
+      <p>THE CITY CHANGES WITH EVERY PLACE.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
